@@ -76,7 +76,7 @@ public class StudentAdmissionController implements TransData {
 		address.setCity("Asmara");
 		address.setState("California");
 		address1.setCity("Massawa");
-		address1.setState("Texas");
+		address1.setState("NewYork");
 		address1.setZip(94609);
 
 		Students student = new Students();
