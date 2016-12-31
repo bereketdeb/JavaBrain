@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    ">
+    
+
+<!-- Spring Hibernate Configuration -->
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+		<property name="username" value="BEREKET"></property>
+		<property name="password" value="1981"></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties" ref="hibernateProperties"></property>
+		<property name="packagesToScan" value="javaCods">
+			
+		</property>
+	</bean>
+	
+	
+	<bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>
+				<prop key="connection.pool.size">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
+			</props>
+		</property>
+	</bean>    
+	
+	
+	
+	<!-- Transaction manager And Session Factory -->
+    
+    <tx:annotation-driven transaction-manager="txManager"  proxy-target-class="true"/>
+	
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+    
+    <!-- End of configuration -->
+
+	<mvc:annotation-driven />
+	<context:component-scan base-package="javaCods" />
+
+	<!-- if we want interceptor for every url request, we have to write like 
+		this -->
+	<mvc:interceptors>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/AdmissionForm.html" />
+			<bean class="javaCods.DaysOfWeekBasedInterceptor" />
+
+		</mvc:interceptor>
+
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="siteLanguage" />
+		</bean>
+
+	</mvc:interceptors>
+
+
+	<!-- if we want interceptor for specific url request, we have to write like 
+		this <mvc:interceptors> <mvc:interceptor> <mvc:mapping path="/AdmissionForm.html" 
+		/> <bean class="javaCods.DaysOfWeekBasedInterceptor" /> </mvc:interceptor> 
+		</mvc:interceptors> -->
+
+	<!-- <bean name="/welcome.html" class= "javaCods.HelloController"></bean> 
+		<bean id="HandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/> 
+		for annotation based, we don't need this statement -->
+
+
+
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+		<property name="prefix">
+			<value>/WEB-INF/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="/WEB-INF/studentMessage" />
+		<property name="cacheSeconds" value="1" />
+		<!-- "cacheSeconds" is used if we want our program to rerun every "1" second, 
+			instead of refreshing it manually. unless you really need it in the development 
+			invironment don't use it. -->
+
+	</bean>
+	
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+	</bean>
+
+
+
+</beans>
