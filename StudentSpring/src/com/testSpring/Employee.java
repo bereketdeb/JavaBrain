@@ -33,6 +33,6 @@ public class Employee {
 	}*/
 	
 	public void getInfo(){
-		System.out.print(address+" "+ age);
+		System.out.print(address+" , "+ age);
 	}
 }
