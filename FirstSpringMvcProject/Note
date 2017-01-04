@@ -1,0 +1,71 @@
+By gontuseries 
+
+Spring MVC Tutorials 26 - Internationalization and Localization 02
+
+            
+	to work with "localization and internationalization" for example to use both English and French 
+			in my AdmissionForm, 
+			- first i have to prepare place holder for all hard coded names. e.g i have to 
+			replace "Student's Name" with <spring:message code="label.studentName" /> 
+			
+			studentName : <input type="text" name="studentName" />         to
+			<spring:message code="label.studentName"/> : <input type="text" name="studentName" />
+			
+			- then go to the "studentMessage.properties" file and we have to specify the value of "label.studentName" 
+			- we have prepare the "studentMessage.properties" file for each language by adding _en and _fr
+			- finally we have to change our browsers language to french and we good to go
+			
+==> what about if we want to change languages with out going to browser setting
+=> we have to do 3 steps
+			- include two links- for English and French at the top of the "Admissionform.jsp
+			
+			<a href="/FirstSpringMvcProject/student/AdmissionForm.html?siteLanguage=en">English</a>
+			<a href="/FirstSpringMvcProject/student/AdmissionForm.html?siteLanguage=fr">French</a>
+			
+			- inside the MVCInterceptor in the spring-distpacher.xml file add the following bean
+			<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="siteLanguage" />
+			</bean>
+			
+			- for "LocaleChangeInterceptor" to work - its mandatory to put an entry of "cookieLocaleResolver" bean
+			in the spring's configuration file. alternatively you can use"sessionLocaleResolver" entry
+			
+			<bean id="localeResolver" 
+			class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+			</bean>
+			
+			----Note from teacher---
+			if you specify cookieLocaleResolver bean as shown below in the spring's configuration file
+			<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+			   <property name-"defaultLocale" value="en" />
+			</bean>
+			then, spring mvc application will first check if there is any cookie present in the client which has the 
+			locale/language informationn present in it:
+			
+			if yes- the application will use the specified language/locale in the cookie to pick an appropriate properties file for that languange /locale.
+			if no - the app will use the default language provided in the syntax above
+			if you have not spefified defaultLocale property with cookieLocaleResolver (as shown in the demo)- the app is going to look for request's accept-header locale( means 
+			the language which is set by client through the language preference settings of the  browser).
+			
+			=> to set cookie in the client's browser which contains the locale/language information, jus specify cookieLocaleResolver bean with the below syntax
+			<bean id="localeResolver" 
+			class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+			<property name-"defaultLocale" value="en" />
+			<property name-"cookieName" value="localeCookie" />
+			<property name-"cookieMaxAge" value="3600" />
+			</bean>
+			- this will set a cookie with the name localeCookie on the client's browser with max age 3600 seconds and language set as en(english)
+			- here 'm sending the "siteLanguage=**" parameter
+			
+Spring MVC Tutorials 33 - Web Services 03 ( First REST API using @ResponseBody )
+steps to create Rest API:
+			- Create a method inside your controller class
+			- add @ResponseBody annotation to the method
+			- create object of the class you want to work with, pls check the method "setStudentslist"
+			- add the following jar files
+			    - jackson-annotation-2.8.1.jar
+			    - jackson-core-2.8.1.jar
+			    - jackson-databind-2.8.1.jar
+			
+
+

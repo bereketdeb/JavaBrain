@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+    default-init-method="initMeth" default-destroy-method="cleanUp" >
+    
+	<context:annotation-config/>
+	<context:component-scan base-package="com.point"/>
+	
+	<bean id="triangle" class="com.brain.Triangle">
+		<property name="Type" value="Equilateral" />
+		
+		<constructor-arg value="20" />
+	<!-- <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" /> 
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	 -->
+
+	</bean>
+	<bean class="com.brain.PostProcessorActivity"/>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" >
+	<property name="basename" value="messages.properties" />
+	
+	</bean>
+ 	
+	<!-- 
+	<bean id="point" class="com.point.points"> 
+	    <property name="pointA" ref="cordA" /> 
+		<property name="pointB" ref="cordB" /> 
+		<property name="pointC" ref="cordC" /> </bean> 
+		
+		<bean id="cordA" class="com.point.cordinates"> 
+		<property name="x" value="15" /> 
+		<property name="y" value="10" /> </bean> 
+		
+		<bean id="cordB" class="com.point.cordinates"> 
+		<property name="x" value="25" /> 
+		<property name="y" value="10" /> </bean> 
+		
+		<bean id="cordC" class="com.point.cordinates"> 
+		<property name="x" value="35" /> 
+		<property name="y" value="10" /> </bean> -->
+
+<!-- Autowiring, it is good for short cut and to avoid linking by "ref", but very hard during bug fix to find which one is autowired with which one.
+byName(id name matches field name of the class ), 
+byType( if they are in the same class), 
+constructor(we have to use constructor injection instead of setters)  
+
+-->
+<!-- init-method="initMeth" destroy-method="cleanUp" -->
+    <!-- <bean id="point" class="com.point.points"  autowire="byName"  > 
+	 </bean>  -->
+	 
+	 <!-- <bean id="circle" class="com.point.Circle" > 
+	 </bean> replaced by @Component -->
+		
+		<bean id="cordin" class="com.point.cordinates"> 
+		<qualifier value="CircleRelated" />
+		<property name="x" value="${x}" /> 
+		<property name="y" value= "${y}" /> </bean> 
+		
+		<bean id="cordinB" class="com.point.cordinates"> 
+		<property name="x" value="25" /> 
+		<property name="y" value="10" /> </bean> 
+		
+		<bean id="cordinC" class="com.point.cordinates"> 
+		<property name="x" value="35" /> 
+		<property name="y" value="10" /> </bean> 
+
+ <!-- we use placeholder to prevent hard coding. to use placeholder 
+ - we have define the configurer class with its property
+ - we have to create ".properties" file and put in the same location with our spring.xml file
+ or we have to specify using "classpath:" for the specific location
+ - then we have to replace the hard coded variables -->
+ 
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
+<property name="locations" value="pointsConfig.properties" />
+</bean>
+
+	<!-- Inner Beans example, we don't need reference, we have to put inside 
+		the property 
+
+	<bean id="point" class="com.point.points">
+		
+		<property name="cordinA">
+			<bean class="com.point.cordinates">
+				<property name="x" value="15" />
+				<property name="y" value="10" />
+			</bean>
+		</property>
+
+		<property name="cordinB">
+			<bean class="com.point.cordinates">
+				<property name="x" value="25" />
+				<property name="y" value="10" />
+			</bean>
+		</property>
+
+		<property name="cordinC">
+			<bean class="com.point.cordinates">
+				<property name="x" value="35" />
+				<property name="y" value="10" />
+			</bean>
+		</property>
+		-->
+		
+		<!--  using collections 
+		<bean id="point" class="com.point.points">
+		<property name="cordinX">
+			<list >
+			<ref bean="cA"/>
+			<ref bean="cB"/>
+			<ref bean="cC"/>
+			</list>
+		</property>
+		</bean>
+		
+			<bean id="cA" class="com.point.cordinates">
+				<property name="x" value="15" />
+				<property name="y" value="10" />
+			</bean>
+	
+
+		
+			<bean id="cB" class="com.point.cordinates">
+				<property name="x" value="25" />
+				<property name="y" value="10" />
+			</bean>
+		
+
+		
+			<bean id="cC" class="com.point.cordinates">
+				<property name="x" value="35" />
+				<property name="y" value="10" />
+			</bean>
+		-->
+
+</beans>
